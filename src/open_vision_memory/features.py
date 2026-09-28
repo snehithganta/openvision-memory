@@ -14,7 +14,8 @@ class DinoV3FeatureExtractor:
     """Extract unit-length CLS-token embeddings from RGB images.
 
     ``model_name`` may be a Hugging Face model ID or a local model directory.
-    The model and its processor are loaded lazily on construction.
+    The model and processor are loaded on construction. On CPU-only machines,
+    use a small batch size; first-time loading also downloads the checkpoint.
     """
 
     def __init__(

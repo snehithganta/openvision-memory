@@ -8,13 +8,36 @@ Open-Vision Memory is a reusable open-set visual recognition baseline with a use
 
 Embeddings can also be clustered with HDBSCAN for exploration. The package keeps backbone extraction, recognition, clustering, persistence, and evaluation independent so later datasets can reuse the same architecture.
 
-## Setup
+## Repository layout
 
-```bash
-pip install -r requirements.txt
+```text
+app.py                         Streamlit recognition and teaching interface
+src/open_vision_memory/        Reusable feature, recognition, clustering, and evaluation code
+scripts/predict.py             Command-line inference for one or more images
+models/                        Backbone and prototype-memory configuration
+results/                       Compact machine-readable experiment metrics
+phase01_model_smoke.ipynb       Small Colab model and CIFAR-10 smoke notebook
 ```
 
+## Setup
+
+Python 3.10 or newer is required. For a complete local install (including the
+Streamlit app and optional clustering), run:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+For just the reusable Python package, install `-e .`; use `-e ".[app,clustering]"`
+to install the interface and HDBSCAN extras. Google Colab already provides a
+GPU-backed Python environment for the larger experiments. The benchmark metrics
+in this repository were computed on a Tesla T4; a CPU-only laptop can run single
+image inference, but feature extraction will be slower.
+
 The full experiment notebook is [Open-Vision Memory - Phases 01-05 on Colab](https://colab.research.google.com/drive/1tySqIEAp4l-ACuXn4pkj9rt04MyiOe-n). It contains the dataset runs and writes their embedding/prototype artifacts to Google Drive. Compact metric outputs are versioned in [`results/`](results/); large `.npz` embedding archives remain in Drive.
+
+New contributors can start with the [project architecture](docs/architecture.md),
+the [Colab-to-app artifact guide](docs/colab-to-app.md), and the [metric definitions](docs/metrics.md).
 
 The default Hugging Face model ID is `facebook/dinov3-vits16-pretrain-lvd1689m`. DINOv3 weights may require accepting the model terms and authenticating with Hugging Face. In Colab, authenticate with `huggingface-cli login` (or set `HF_TOKEN`) before loading weights. For fully offline use, pass a local model directory as `model_name`.
 
@@ -28,6 +51,8 @@ streamlit run app.py
 The default DINOv3 checkpoint is gated. After accepting its Hugging Face terms, set `HF_TOKEN` in the environment used to launch Streamlit. Do not commit the token. In the sidebar, load a saved prototype NPZ from a completed experiment, or teach categories by uploading labeled examples. User-taught embeddings are saved to `.open_vision_memory/object_memory.npz` on the machine running the app.
 
 The app uses the loaded experiment threshold as its starting point when the artifact contains one. For a newly taught memory, choose the rejection distance using a separate held-out validation set before treating it as a calibrated operating point. User-taught examples directly update their class prototype.
+
+For setup troubleshooting (including gated-model access and Colab runtime notes), see [docs/colab-to-app.md](docs/colab-to-app.md).
 
 ## Minimal inference setup
 
@@ -50,6 +75,17 @@ Threshold calibration uses the configured quantile of each known validation samp
 `save_embeddings` writes embeddings, labels, and JSON metadata (including model/configuration details) in a compressed NPZ. `OpenSetRecognizer.save` writes prototypes and the rejection configuration. These artifacts are sufficient to reproduce recognition without recomputing the training embeddings; feature extraction still requires the selected backbone weights.
 
 The backbone reference and saved ImageNet-100 prototype artifact instructions are in [`models/`](models/). Use `models/imagenet100_config.json` to identify the exact feature model, known/unknown class split, and threshold used by the app-ready prototype artifact.
+
+## Run inference from the command line
+
+After downloading the `prototype_memory.npz` artifact from the Drive path in `models/README.md`, run:
+
+```bash
+python scripts/predict.py --prototype models/prototype_memory.npz path/to/image.jpg
+```
+
+Use `--device cpu` on a CPU-only machine or `--device cuda` on a compatible GPU. The feature model loads from Hugging Face on first use; the complete dataset benchmarks do not run as part of this single-image command.
+To show dataset class names instead of numeric IDs, pass `--label-map path/to/labels.json`, where the JSON file maps string label IDs to names.
 
 ## Experimental snapshot
 

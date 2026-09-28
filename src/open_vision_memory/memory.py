@@ -89,10 +89,13 @@ class OpenSetRecognizer:
     @classmethod
     def load(cls, path: str | Path) -> "OpenSetRecognizer":
         with np.load(path, allow_pickle=False) as data:
-            model = cls(threshold_quantile=float(data["threshold_quantile"]))
+            # Experiment artifacts predate the packaged API and store only
+            # labels, prototypes, and the calibrated threshold.
+            quantile = float(data["threshold_quantile"]) if "threshold_quantile" in data else 0.95
+            model = cls(threshold_quantile=quantile)
             model.labels_ = data["labels"]
             model.prototypes_ = data["prototypes"].astype(np.float32)
-            threshold = float(data["threshold"])
+            threshold = float(data["threshold"]) if "threshold" in data else float("nan")
             model.threshold_ = None if np.isnan(threshold) else threshold
         return model
 

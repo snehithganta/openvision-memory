@@ -2,6 +2,8 @@
 
 These compact JSON files capture the evaluated metrics and protocols from the Colab runs. The full experiment code is in the linked Colab notebook in the project README. Embedding matrices and prototype artifacts are too large for this source repository and remain in Google Drive at the paths recorded in the notebook and metrics.
 
+Metric names, threshold interpretation, and limitations are described in [`../docs/metrics.md`](../docs/metrics.md). The architecture and inference pipeline are documented in [`../docs/architecture.md`](../docs/architecture.md).
+
 - `cifar10.json`: CIFAR-10 official test split; 30 prototype-fit and 20 calibration images per known class.
 - `stl10.json`: STL-10 official labeled test split; 300 prototype-fit and 100 calibration images per known class.
 - `stl10_matched_budget.json`: STL-10 test results matched to the CIFAR-10 fit/calibration counts.
