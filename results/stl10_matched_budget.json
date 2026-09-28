@@ -1,0 +1,19 @@
+{
+  "dataset": "STL-10 official labeled test split",
+  "backbone": "facebook/dinov3-vits16-pretrain-lvd1689m",
+  "prototype_fit_per_known_class": 30,
+  "calibration_per_known_class": 20,
+  "test_images": 8000,
+  "known_class_ids": [0, 1, 2, 3, 4, 5, 6, 7],
+  "unknown_class_ids": [8, 9],
+  "threshold_quantile": 0.95,
+  "rejection_threshold": 0.8127181529998779,
+  "known_closed_set_accuracy": 0.94265625,
+  "known_acceptance_coverage": 0.95359375,
+  "known_accuracy_among_accepted": 0.9593642470915943,
+  "unknown_detection_f1": 0.8336919766369505,
+  "unknown_detection_auroc": 0.97655791015625,
+  "hdbscan_ari_same_balanced_test_subset": 0.2504169711851112,
+  "prototype_fit_images": 240,
+  "calibration_images": 160
+}

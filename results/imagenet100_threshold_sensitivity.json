@@ -1,0 +1,32 @@
+[
+  {
+    "calibration_quantile": 0.9,
+    "rejection_threshold": 0.6641361713409424,
+    "known_closed_set_accuracy": 0.8755,
+    "known_acceptance_coverage": 0.89975,
+    "known_accuracy_among_accepted": 0.9113642678521812,
+    "unknown_detection_f1": 0.675177304964539,
+    "unknown_detection_auroc": 0.89824175,
+    "confusion_matrix_tn_fp_fn_tp": [3599, 401, 286, 714]
+  },
+  {
+    "calibration_quantile": 0.95,
+    "rejection_threshold": 0.71896892786026,
+    "known_closed_set_accuracy": 0.8755,
+    "known_acceptance_coverage": 0.9475,
+    "known_accuracy_among_accepted": 0.8984168865435356,
+    "unknown_detection_f1": 0.6202964652223489,
+    "unknown_detection_auroc": 0.89824175,
+    "confusion_matrix_tn_fp_fn_tp": [3790, 210, 456, 544]
+  },
+  {
+    "calibration_quantile": 0.99,
+    "rejection_threshold": 0.8045187592506409,
+    "known_closed_set_accuracy": 0.8755,
+    "known_acceptance_coverage": 0.98575,
+    "known_accuracy_among_accepted": 0.8838447882323104,
+    "unknown_detection_f1": 0.30200803212851407,
+    "unknown_detection_auroc": 0.89824175,
+    "confusion_matrix_tn_fp_fn_tp": [3943, 57, 812, 188]
+  }
+]
