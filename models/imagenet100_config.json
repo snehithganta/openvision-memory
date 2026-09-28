@@ -1,0 +1,16 @@
+{
+  "backbone_model_id": "facebook/dinov3-vits16-pretrain-lvd1689m",
+  "embedding_dimension": 384,
+  "pooling": "CLS token",
+  "normalization": "L2",
+  "dataset": "ImageNet-100",
+  "prototype_artifact": "prototype_memory.npz",
+  "known_class_count": 80,
+  "unknown_class_count": 20,
+  "known_class_ids": [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 25, 27, 28, 29, 30, 31, 32, 33, 35, 37, 38, 39, 41, 43, 44, 45, 46, 47, 48, 51, 52, 54, 55, 56, 57, 58, 59, 60, 61, 62, 64, 65, 66, 67, 68, 69, 70, 72, 73, 74, 75, 76, 77, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 94, 96, 97, 98, 99],
+  "unknown_class_ids": [0, 4, 13, 23, 24, 26, 34, 36, 40, 42, 49, 50, 53, 63, 71, 78, 79, 92, 93, 95],
+  "calibration_per_known_class": 50,
+  "calibration_quantile": 0.95,
+  "rejection_threshold": 0.71896892786026,
+  "prototype_artifact_drive_path": "/content/drive/MyDrive/open-vision-memory/phase04/imagenet100/prototype_memory.npz"
+}

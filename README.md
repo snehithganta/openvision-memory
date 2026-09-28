@@ -49,6 +49,8 @@ Threshold calibration uses the configured quantile of each known validation samp
 
 `save_embeddings` writes embeddings, labels, and JSON metadata (including model/configuration details) in a compressed NPZ. `OpenSetRecognizer.save` writes prototypes and the rejection configuration. These artifacts are sufficient to reproduce recognition without recomputing the training embeddings; feature extraction still requires the selected backbone weights.
 
+The backbone reference and saved ImageNet-100 prototype artifact instructions are in [`models/`](models/). Use `models/imagenet100_config.json` to identify the exact feature model, known/unknown class split, and threshold used by the app-ready prototype artifact.
+
 ## Experimental snapshot
 
 The completed runs use DINOv3 ViT-S/16. CIFAR-10 and STL-10 use 80% of classes as known and 20% as unknown; thresholds were calibrated at the 95th percentile from known-class validation examples. The STL-10 matched-budget row uses the same per-class prototype and calibration counts as CIFAR-10. ImageNet-100 uses a seeded split of 80 known and 20 unknown classes, with 50 calibration images per known class.
