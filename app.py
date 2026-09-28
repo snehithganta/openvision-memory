@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import os
 from pathlib import Path
 
 import numpy as np
@@ -15,6 +16,9 @@ from open_vision_memory.clustering import cluster_embeddings
 
 APP_DIR = Path(__file__).resolve().parent
 DEFAULT_MEMORY_PATH = APP_DIR / ".open_vision_memory" / "object_memory.npz"
+if os.environ.get("OPEN_VISION_MEMORY_PATH"):
+    DEFAULT_MEMORY_PATH = Path(os.environ["OPEN_VISION_MEMORY_PATH"]).expanduser()
+DEFAULT_PROTOTYPE_PATH = os.environ.get("OPEN_VISION_PROTOTYPE_PATH")
 DEFAULT_MODEL = "facebook/dinov3-vits16-pretrain-lvd1689m"
 
 
@@ -43,8 +47,8 @@ def save_examples(path: Path, examples: list[np.ndarray], labels: list[str]) -> 
     np.savez_compressed(path, embeddings=matrix, labels=np.asarray(labels, dtype=str))
 
 
-def read_prototype_artifact(file) -> tuple[np.ndarray, list[str], float | None]:
-    data = np.load(io.BytesIO(file.getvalue()), allow_pickle=False)
+def read_prototype_bytes(content: bytes) -> tuple[np.ndarray, list[str], float | None]:
+    data = np.load(io.BytesIO(content), allow_pickle=False)
     try:
         labels_key = "labels" if "labels" in data else "known_ids"
         prototypes_key = "prototypes" if "prototypes" in data else "prototype_vectors"
@@ -64,6 +68,10 @@ def read_prototype_artifact(file) -> tuple[np.ndarray, list[str], float | None]:
         return np.stack([unit_vector(row) for row in prototypes]), labels, threshold
     finally:
         data.close()
+
+
+def read_prototype_artifact(file) -> tuple[np.ndarray, list[str], float | None]:
+    return read_prototype_bytes(file.getvalue())
 
 
 @st.cache_resource
@@ -105,6 +113,14 @@ if "base_prototypes" not in st.session_state:
     st.session_state.base_prototypes = None
     st.session_state.base_labels = []
     st.session_state.base_threshold = None
+    if DEFAULT_PROTOTYPE_PATH and Path(DEFAULT_PROTOTYPE_PATH).is_file():
+        try:
+            artifact_bytes = Path(DEFAULT_PROTOTYPE_PATH).read_bytes()
+            (st.session_state.base_prototypes,
+             st.session_state.base_labels,
+             st.session_state.base_threshold) = read_prototype_bytes(artifact_bytes)
+        except Exception as error:
+            st.error(f"Could not load the configured prototype memory: {error}")
 if "predictions" not in st.session_state:
     st.session_state.predictions = []
     st.session_state.unknown_embeddings = []
@@ -120,6 +136,8 @@ with st.sidebar:
     device = st.selectbox("Device", ["auto", "cuda", "cpu"], index=0)
     batch_size = st.slider("Batch size", min_value=1, max_value=32, value=8)
     st.caption("DINOv3 access may require accepted Hugging Face model terms and an HF_TOKEN environment variable.")
+    if DEFAULT_PROTOTYPE_PATH and Path(DEFAULT_PROTOTYPE_PATH).is_file():
+        st.caption("Loaded the prototype memory configured for this deployment.")
     st.divider()
     st.subheader("Known-class memory")
     prototype_file = st.file_uploader("Load a saved prototype_memory.npz", type=["npz"], key="prototype_upload")

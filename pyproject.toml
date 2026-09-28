@@ -11,7 +11,7 @@ dependencies = ["numpy>=1.24", "Pillow>=10", "torch>=2.1", "transformers>=4.45",
 
 [project.optional-dependencies]
 clustering = ["hdbscan>=0.8.40"]
-app = ["streamlit>=1.50"]
+app = ["streamlit>=1.57"]
 dev = ["pytest>=8"]
 
 [tool.setuptools.packages.find]

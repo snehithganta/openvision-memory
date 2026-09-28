@@ -22,6 +22,11 @@ The browser downloads `prototype_memory.npz`. Put it in this repository's
 their dataset label IDs, and the saved rejection threshold. Large embedding
 archives are not needed for inference.
 
+For a Colab-hosted app, the launch cell can point `OPEN_VISION_PROTOTYPE_PATH`
+at the Drive copy and `OPEN_VISION_MEMORY_PATH` at a Drive file. This makes the
+known-class memory load automatically and keeps user-taught examples between
+Colab sessions.
+
 ## 2. Install and authenticate
 
 Use Python 3.10 or newer. In a virtual environment, install the project:
